@@ -58,13 +58,12 @@ def makeColNodeConsistent(n, board, variables):
 
 
 def equalZeroOne(n, variables):
-    for varNUM in range(7, 8):
+    for varNUM in range(2 * n):
         tempList = []
         for domainVar in variables[varNUM].getDomain():
             res = [int(i) for i in bin(domainVar)[2:]]
             while len(res) < n:
                 res.insert(0, 0)
-            print(res)
             ZC = OC = int(0)
             for i in res:
                 if str(i) == '0':
@@ -72,6 +71,26 @@ def equalZeroOne(n, variables):
                 if str(i) == '1':
                     OC += 1
             if ZC == OC:
+                tempList.append(deepcopy(domainVar))
+
+        variables[varNUM].setDomain(tempList)
+
+
+def moreThanTwoSame(n, variables):
+    for varNUM in range(2 * n):
+        tempList = []
+        for domainVar in variables[varNUM].getDomain():
+            res = [int(i) for i in bin(domainVar)[2:]]
+            while len(res) < n:
+                res.insert(0, 0)
+            isOk = True
+
+            for i in range(0, n - 2):
+                if res[i] == res[i + 1] and res[i + 1] == res[i + 2]:
+                    isOk = False
+                    break
+
+            if isOk:
                 tempList.append(deepcopy(domainVar))
 
         variables[varNUM].setDomain(tempList)
@@ -92,6 +111,7 @@ def main():
     makeRowNodeConsistent(n, board, variables)
     makeColNodeConsistent(n, board, variables)
     equalZeroOne(n, variables)
+    moreThanTwoSame(n, variables)
     print(variables[7].getDomain())
 
 
