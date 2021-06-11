@@ -1,18 +1,15 @@
-
 def completenessChecker(َA):
     for i in َA.keys():
-        if َA[i] == None:
+        if َA[i] is None:
             return False
     return True
-
 
 
 def isThereEmptyVariable(varDomains):
     for i in varDomains.keys():
-        if varDomains[i] == None:
+        if varDomains[i] is None:
             return False
     return True
-
 
 
 def backtrackingCSP(A, varDomains):
@@ -31,7 +28,7 @@ def backtrackingCSP(A, varDomains):
 
         result = backtrackingCSP(A, varDomains)
 
-        if result != False:
+        if result:
             return result
         A[X] = None
 
