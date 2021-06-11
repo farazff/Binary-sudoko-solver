@@ -57,6 +57,26 @@ def makeColNodeConsistent(n, board, variables):
         variables[n + colNUM].setDomain(tempList)
 
 
+def equalZeroOne(n, variables):
+    for varNUM in range(7, 8):
+        tempList = []
+        for domainVar in variables[varNUM].getDomain():
+            res = [int(i) for i in bin(domainVar)[2:]]
+            while len(res) < n:
+                res.insert(0, 0)
+            print(res)
+            ZC = OC = int(0)
+            for i in res:
+                if str(i) == '0':
+                    ZC += 1
+                if str(i) == '1':
+                    OC += 1
+            if ZC == OC:
+                tempList.append(deepcopy(domainVar))
+
+        variables[varNUM].setDomain(tempList)
+
+
 def main():
     size = input().split()
     n = int(size[0])
@@ -71,7 +91,8 @@ def main():
     makeDomainFull(n, variables)
     makeRowNodeConsistent(n, board, variables)
     makeColNodeConsistent(n, board, variables)
-    # print(variables[7].getDomain())
+    equalZeroOne(n, variables)
+    print(variables[7].getDomain())
 
 
 if __name__ == "__main__":
