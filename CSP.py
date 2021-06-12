@@ -37,12 +37,17 @@ def forwardChecking(varDomain):
     return varDomain
 
 
+def LCV(domain):
+    # TODO: Complete LCV
+    return domain
+
+
 def backtrackingCSP(A, varDomains, n):
     if completenessChecker(A, n):
         return A
 
     X = MCV(A, varDomains)
-    D = X.getDomain()
+    D = LCV(X.getDomain())
 
     for v in D:
         print(X.getName(), " !! ", v)
