@@ -1,6 +1,6 @@
 import math
-from copy import deepcopy
 
+from CSP import *
 from Variable import Variable
 
 
@@ -112,7 +112,12 @@ def main():
     makeColNodeConsistent(n, board, variables)
     equalZeroOne(n, variables)
     moreThanTwoSame(n, variables)
-    print(variables[7].getDomain())
+
+    for i in variables:
+        print(i.getName(), " !! ", i.getDomain())
+
+    # print(variables[7].getDomain())
+    print(backtrackingCSP({}, variables, n))
 
 
 if __name__ == "__main__":
