@@ -1,37 +1,61 @@
+import random
+from copy import deepcopy
 
-def completenessChecker(َA):
-    for i in َA.keys():
-        if َA[i] == None:
-            return False
-    return True
 
+def completenessChecker(A, n):
+    if len(A) == 2 * n:
+        return True
+    return False
 
 
 def isThereEmptyVariable(varDomains):
-    for i in varDomains.keys():
-        if varDomains[i] == None:
-            return False
-    return True
+    for i in varDomains:
+        if i.getDomainLen() == 0:
+            return True
+    return False
 
 
+def MCV(A, varDomain):
+    tempList = []
+    print(A)
+    for variable in varDomain:
+        if variable.getName() not in A:
+            tempList.append(variable)
 
-def backtrackingCSP(A, varDomains):
-    if completenessChecker(A):
+    tempList.sort(key=lambda x: x.getDomainLen(), reverse=False)
+    finalList = []
+    for i in tempList:
+        if i.getDomainLen() == tempList[0].getDomainLen():
+            finalList.append(i)
+
+    select = random.randint(0, len(finalList) - 1)
+    return finalList[select]
+
+
+def forwardChecking(varDomain):
+    # TODO: Complete this function
+    return varDomain
+
+
+def backtrackingCSP(A, varDomains, n):
+    if completenessChecker(A, n):
         return A
-    X = None  # MCV(A)
-    D = None  # LCV(X)
+
+    X = MCV(A, varDomains)
+    D = X.getDomain()
 
     for v in D:
-        A[X] = v
+        print(X.getName(), " !! ", v)
+        A[X.getName()] = v
 
-        varDomains = None  # forwardChecking(varDomains, X, v, A)
+        varDomains = forwardChecking(varDomains)  # forwardChecking(varDomains, X, v, A)
 
-        if isThereEmptyVariable(A, varDomains):
+        if isThereEmptyVariable(varDomains):
             return False
 
-        result = backtrackingCSP(A, varDomains)
+        result = backtrackingCSP(A, varDomains, n)
 
-        if result != False:
+        if result:
             return result
         A[X] = None
 
