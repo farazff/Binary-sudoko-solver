@@ -113,11 +113,16 @@ def main():
     equalZeroOne(n, variables)
     moreThanTwoSame(n, variables)
 
-    for i in variables:
-        print(i.getName(), " !! ", i.getDomain())
+    # for i in variables:
+    #     print(i.getName(), " !! ", i.getDomain())
 
-    # print(variables[7].getDomain())
-    print(backtrackingCSP({}, variables, n))
+    A = backtrackingCSP({}, variables, n, board)
+
+    for var in A:
+        res = [int(i) for i in bin(A[var])[2:]]
+        while len(res) < n:
+            res.insert(0, 0)
+        print(var, " ", res)
 
 
 if __name__ == "__main__":

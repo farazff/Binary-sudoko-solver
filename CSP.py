@@ -1,6 +1,8 @@
 import random
 from copy import deepcopy
 
+from Main import makeRowNodeConsistent, makeColNodeConsistent
+
 
 def completenessChecker(A, n):
     if len(A) == 2 * n:
@@ -32,70 +34,24 @@ def MCV(A, varDomain):
     return finalList[select]
 
 
-def forwardChecking(varDomain):
+def forwardChecking(varDomain, board, n):
     # vv = deepcopy(varDomain)
     # for i in varDomain:
     #     print("\n", i.getName(), "  :  ", i.getDomain(), end="-")
-    checking(varDomain)
+    # checking(varDomain)
     # for i in varDomain:
     #     print("\n", i.getName(), "  :::  ", i.getDomain(), end="-")
-    #TODO -> rows and columns deconlflicting handling
+    # TODO -> rows and columns de conflicting handling
 
-    # tempDict = {}
-    # for dName in varDomain:
-    #     tempLst = []
-    #     for d in dName.getDomain():
-    #         res = [int(i) for i in bin(d)[2:]]
-    #         while len(res) < len(varDomain) / 2:
-    #             res.insert(0, 0)
-    #         tempLst.append(res)
-    #     tempDict[dName.getName()] = tempLst
-
-
-
-    # for i in tempDict.keys():
-    #     print("\n",i," --:-- ",tempDict[i])
-    #
-    # for i in varDomain:
-    #     print("\n",i.getName()," -:- ",i.getDomain())
-
-
-
-
-    # for row in range(len(varDomain) // 2):
-    #     for column in range(len(varDomain) // 2):
-    #         for rowDomainMember in tempDict["R" + str(row)]:
-    #             for columnDomainMember in tempDict["C" + str(column)]:
-    #                 print( "row:",row ,"  -  ", "column:", column)
-    #                 if rowDomainMember[column] != columnDomainMember[row]:
-    #                     print("yes!")
-    #                     print("row:", rowDomainMember, "  -  ", "column:", columnDomainMember)
-    #
-    #                     tempDict["C" + str(column)].remove(columnDomainMember)
-    #                 else:
-    #                     print("no!")
-    #                     print("row:", rowDomainMember, "  -  ", "column:", columnDomainMember)
-    #                 print()
-    #
-    # for i in tempDict.keys():
-    #     # print("\n-", i, "-:- ")
-    #     for k in varDomain:
-    #         if i in k.getName():
-    #             k.getDomain().clear()
-    #             for j in tempDict[i]:
-    #                 k.addDomain(binaryToDecimal(int("".join([str(int) for int in j]))))
-    # print("last var domains:")
-    # for i in varDomain:
-    #     print(i.getName(), " : ", i.getDomain())
-
-
+    makeRowNodeConsistent(n, board, varDomain)
+    makeColNodeConsistent(n, board, varDomain)
 
     return varDomain
 
 
 def binaryToDecimal(binary):
     decimal, i, n = 0, 0, 0
-    while (binary != 0):
+    while binary != 0:
         dec = binary % 10
         decimal = decimal + dec * pow(2, i)
         binary = binary // 10
@@ -130,7 +86,32 @@ def LCV(domain):
     return domain
 
 
-def backtrackingCSP(A, varDomains, n):
+def updateBoard(board, name, v, n):
+    res = [int(i) for i in bin(v)[2:]]
+    while len(res) < n:
+        res.insert(0, 0)
+    if name[0] == 'R':
+        rowNum = int(name[1])
+        for i in range(n):
+            board[rowNum][i] = res[i]
+        return
+
+    if name[0] == 'C':
+        colNum = int(name[1])
+        for i in range(n):
+            board[i][colNum] = res[i]
+        return
+
+
+def printBoard(board, n):
+    for i in range(n):
+        for j in range(n):
+            print(board[i][j], end=" ")
+        print()
+    print(end="\n\n")
+
+
+def backtrackingCSP(A, varDomains, n, board):
     if completenessChecker(A, n):
         return A
 
@@ -138,18 +119,26 @@ def backtrackingCSP(A, varDomains, n):
     D = LCV(X.getDomain())
 
     for v in D:
-        # print(X.getName(), " !! ", v)
+
+        domain = deepcopy(varDomains)
+        boardThisLevel = deepcopy(board)
         A[X.getName()] = v
+        updateBoard(boardThisLevel, X.getName(), v, n)
 
-        varDomains = forwardChecking(varDomains)  # forwardChecking(varDomains, X, v, A)
+        res = [int(i) for i in bin(v)[2:]]
+        while len(res) < n:
+            res.insert(0, 0)
 
-        if isThereEmptyVariable(varDomains):
+        domain = forwardChecking(domain, boardThisLevel, n)
+
+        if isThereEmptyVariable(domain):
             return False
 
-        result = backtrackingCSP(A, varDomains, n)
+        result = backtrackingCSP(A, deepcopy(domain), n, boardThisLevel)
 
         if result:
+            printBoard(board, n)
             return result
-        A[X] = None
+        A.pop(X.getName())
 
     return False
