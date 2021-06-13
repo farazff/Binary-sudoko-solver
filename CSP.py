@@ -17,7 +17,7 @@ def isThereEmptyVariable(varDomains):
 
 def MCV(A, varDomain):
     tempList = []
-    print(A)
+    # print(A)
     for variable in varDomain:
         if variable.getName() not in A:
             tempList.append(variable)
@@ -33,52 +33,87 @@ def MCV(A, varDomain):
 
 
 def forwardChecking(varDomain):
-    for i in varDomain:
-        print("\n", i.getName(), "  :  ", i.getDomain(), end="-")
+    # vv = deepcopy(varDomain)
+    # for i in varDomain:
+    #     print("\n", i.getName(), "  :  ", i.getDomain(), end="-")
     checking(varDomain)
-    for i in varDomain:
-        print("\n", i.getName(), "  :::  ", i.getDomain(), end="-")
-    tempDict={}
+    # for i in varDomain:
+    #     print("\n", i.getName(), "  :::  ", i.getDomain(), end="-")
+    tempDict = {}
     for dName in varDomain:
-        tempLst=[]
+        tempLst = []
         for d in dName.getDomain():
             res = [int(i) for i in bin(d)[2:]]
-            while len(res) < len(varDomain)/2:
+            while len(res) < len(varDomain) / 2:
                 res.insert(0, 0)
             tempLst.append(res)
-        tempDict[dName]=tempLst
-    print("\n",tempDict)
-    for row in len(varDomain)//2:
-        for column in len(varDomain)//2:
-            for rowDomainMember in tempDict["R",str(row)]:
-                for columnDomainMember in tempDict["C",str(column)]:
+        tempDict[dName.getName()] = tempLst
 
+    for i in tempDict.keys():
+        print("\n",i," --:-- ",tempDict[i])
 
+    for i in varDomain:
+        print("\n",i.getName()," -:- ",i.getDomain())
+
+    for row in range(len(varDomain) // 2):
+        for column in range(len(varDomain) // 2):
+            for rowDomainMember in tempDict["R" + str(row)]:
+                for columnDomainMember in tempDict["C" + str(column)]:
+                    print( "row:",row ,"  -  ", "column:", column)
+                    if rowDomainMember[column] != columnDomainMember[row]:
+                        print("yes!")
+                        print("row:", rowDomainMember, "  -  ", "column:", columnDomainMember)
+
+                        tempDict["C" + str(column)].remove(columnDomainMember)
+                    else:
+                        print("no!")
+                        print("row:", rowDomainMember, "  -  ", "column:", columnDomainMember)
+                    print()
+
+    for i in tempDict.keys():
+        # print("\n-", i, "-:- ")
+        for k in varDomain:
+            if i in k.getName():
+                k.getDomain().clear()
+                for j in tempDict[i]:
+                    k.addDomain(binaryToDecimal(int("".join([str(int) for int in j]))))
+    print("last var domains:")
+    for i in varDomain:
+        print(i.getName(), " : ", i.getDomain())
+
+    print()
 
     return varDomain
 
 
+def binaryToDecimal(binary):
+    decimal, i, n = 0, 0, 0
+    while (binary != 0):
+        dec = binary % 10
+        decimal = decimal + dec * pow(2, i)
+        binary = binary // 10
+        i += 1
+    return decimal
+
+
 def checking(varDomain):
-    tmpDictR ={}
+    tmpDictR = {}
     tmpDictC = {}
     for dName in varDomain:
         if 'C' in dName.getName():
-
             for dom in dName.getDomain():
                 try:
-                        tmpDictC[dom]
-                        dName.getDomain().remove(dom)
-                        tmpDictC[dom]=False
+                    tmpDictC[dom]
+                    dName.getDomain().remove(dom)
+                    tmpDictC[dom] = False
                 except:
                     tmpDictC[dom] = True
-
         elif 'R' in dName.getName():
-
             for dom in dName.getDomain():
                 try:
-                        tmpDictR[dom]
-                        dName.getDomain().remove(dom)
-                        tmpDictR[dom]=False
+                    tmpDictR[dom]
+                    dName.getDomain().remove(dom)
+                    tmpDictR[dom] = False
                 except:
                     tmpDictR[dom] = True
 
@@ -96,7 +131,7 @@ def backtrackingCSP(A, varDomains, n):
     D = LCV(X.getDomain())
 
     for v in D:
-        print(X.getName(), " !! ", v)
+        # print(X.getName(), " !! ", v)
         A[X.getName()] = v
 
         varDomains = forwardChecking(varDomains)  # forwardChecking(varDomains, X, v, A)

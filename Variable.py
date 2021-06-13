@@ -27,3 +27,4 @@ class Variable:
     def setDomain(self, domain):
         self.__domain = deepcopy(domain)
         self.__domainLen = len(self.__domain)
+
