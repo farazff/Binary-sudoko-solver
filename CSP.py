@@ -33,8 +33,54 @@ def MCV(A, varDomain):
 
 
 def forwardChecking(varDomain):
-    # TODO: Complete this function
+    for i in varDomain:
+        print("\n", i.getName(), "  :  ", i.getDomain(), end="-")
+    checking(varDomain)
+    for i in varDomain:
+        print("\n", i.getName(), "  :::  ", i.getDomain(), end="-")
+    tempDict={}
+    for dName in varDomain:
+        tempLst=[]
+        for d in dName.getDomain():
+            res = [int(i) for i in bin(d)[2:]]
+            while len(res) < len(varDomain)/2:
+                res.insert(0, 0)
+            tempLst.append(res)
+        tempDict[dName]=tempLst
+    print("\n",tempDict)
+    for row in len(varDomain)//2:
+        for column in len(varDomain)//2:
+            for rowDomainMember in tempDict["R",str(row)]:
+                for columnDomainMember in tempDict["C",str(column)]:
+                    pass
+
+
     return varDomain
+
+
+def checking(varDomain):
+    tmpDictR ={}
+    tmpDictC = {}
+    for dName in varDomain:
+        if 'C' in dName.getName():
+
+            for dom in dName.getDomain():
+                try:
+                        tmpDictC[dom]
+                        dName.getDomain().remove(dom)
+                        tmpDictC[dom]=False
+                except:
+                    tmpDictC[dom] = True
+
+        elif 'R' in dName.getName():
+
+            for dom in dName.getDomain():
+                try:
+                        tmpDictR[dom]
+                        dName.getDomain().remove(dom)
+                        tmpDictR[dom]=False
+                except:
+                    tmpDictR[dom] = True
 
 
 def LCV(domain):
