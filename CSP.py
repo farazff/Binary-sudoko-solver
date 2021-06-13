@@ -52,7 +52,7 @@ def forwardChecking(varDomain):
         for column in len(varDomain)//2:
             for rowDomainMember in tempDict["R",str(row)]:
                 for columnDomainMember in tempDict["C",str(column)]:
-                    pass
+
 
 
     return varDomain
