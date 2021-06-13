@@ -39,49 +39,56 @@ def forwardChecking(varDomain):
     checking(varDomain)
     # for i in varDomain:
     #     print("\n", i.getName(), "  :::  ", i.getDomain(), end="-")
-    tempDict = {}
-    for dName in varDomain:
-        tempLst = []
-        for d in dName.getDomain():
-            res = [int(i) for i in bin(d)[2:]]
-            while len(res) < len(varDomain) / 2:
-                res.insert(0, 0)
-            tempLst.append(res)
-        tempDict[dName.getName()] = tempLst
+    #TODO -> rows and columns deconlflicting handling
 
-    for i in tempDict.keys():
-        print("\n",i," --:-- ",tempDict[i])
+    # tempDict = {}
+    # for dName in varDomain:
+    #     tempLst = []
+    #     for d in dName.getDomain():
+    #         res = [int(i) for i in bin(d)[2:]]
+    #         while len(res) < len(varDomain) / 2:
+    #             res.insert(0, 0)
+    #         tempLst.append(res)
+    #     tempDict[dName.getName()] = tempLst
 
-    for i in varDomain:
-        print("\n",i.getName()," -:- ",i.getDomain())
 
-    for row in range(len(varDomain) // 2):
-        for column in range(len(varDomain) // 2):
-            for rowDomainMember in tempDict["R" + str(row)]:
-                for columnDomainMember in tempDict["C" + str(column)]:
-                    print( "row:",row ,"  -  ", "column:", column)
-                    if rowDomainMember[column] != columnDomainMember[row]:
-                        print("yes!")
-                        print("row:", rowDomainMember, "  -  ", "column:", columnDomainMember)
 
-                        tempDict["C" + str(column)].remove(columnDomainMember)
-                    else:
-                        print("no!")
-                        print("row:", rowDomainMember, "  -  ", "column:", columnDomainMember)
-                    print()
+    # for i in tempDict.keys():
+    #     print("\n",i," --:-- ",tempDict[i])
+    #
+    # for i in varDomain:
+    #     print("\n",i.getName()," -:- ",i.getDomain())
 
-    for i in tempDict.keys():
-        # print("\n-", i, "-:- ")
-        for k in varDomain:
-            if i in k.getName():
-                k.getDomain().clear()
-                for j in tempDict[i]:
-                    k.addDomain(binaryToDecimal(int("".join([str(int) for int in j]))))
-    print("last var domains:")
-    for i in varDomain:
-        print(i.getName(), " : ", i.getDomain())
 
-    print()
+
+
+    # for row in range(len(varDomain) // 2):
+    #     for column in range(len(varDomain) // 2):
+    #         for rowDomainMember in tempDict["R" + str(row)]:
+    #             for columnDomainMember in tempDict["C" + str(column)]:
+    #                 print( "row:",row ,"  -  ", "column:", column)
+    #                 if rowDomainMember[column] != columnDomainMember[row]:
+    #                     print("yes!")
+    #                     print("row:", rowDomainMember, "  -  ", "column:", columnDomainMember)
+    #
+    #                     tempDict["C" + str(column)].remove(columnDomainMember)
+    #                 else:
+    #                     print("no!")
+    #                     print("row:", rowDomainMember, "  -  ", "column:", columnDomainMember)
+    #                 print()
+    #
+    # for i in tempDict.keys():
+    #     # print("\n-", i, "-:- ")
+    #     for k in varDomain:
+    #         if i in k.getName():
+    #             k.getDomain().clear()
+    #             for j in tempDict[i]:
+    #                 k.addDomain(binaryToDecimal(int("".join([str(int) for int in j]))))
+    # print("last var domains:")
+    # for i in varDomain:
+    #     print(i.getName(), " : ", i.getDomain())
+
+
 
     return varDomain
 
