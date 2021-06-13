@@ -125,10 +125,6 @@ def backtrackingCSP(A, varDomains, n, board):
         A[X.getName()] = v
         updateBoard(boardThisLevel, X.getName(), v, n)
 
-        res = [int(i) for i in bin(v)[2:]]
-        while len(res) < n:
-            res.insert(0, 0)
-
         domain = forwardChecking(domain, boardThisLevel, n)
 
         if isThereEmptyVariable(domain):
