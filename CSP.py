@@ -1,6 +1,6 @@
 import random
 from copy import deepcopy
-
+import numpy
 from Main import makeRowNodeConsistent, makeColNodeConsistent
 
 
@@ -35,55 +35,86 @@ def MCV(A, varDomain):
 
 
 def forwardChecking(varDomain, board, n):
-    # vv = deepcopy(varDomain)
-    # for i in varDomain:
-    #     print("\n", i.getName(), "  :  ", i.getDomain(), end="-")
-    # checking(varDomain)
-    # for i in varDomain:
-    #     print("\n", i.getName(), "  :::  ", i.getDomain(), end="-")
-    # TODO -> rows and columns de conflicting handling
+    for row in range(len(board)):
+        if not '-' in ''.join(map(str, board[row])):
+            for i in varDomain:
+                if int(''.join(map(str, board[row])), 2) in i.getDomain() and 'R' in i.getName():
+                    if int(i.getName()[1:]) != row:
+                        # print(i.getName(),"  -R-  ",i.getDomain())
+                        # print(row)
+                        i.getDomain().remove(int(''.join(map(str, board[row])), 2))
+
+    boardR = numpy.array(board)
+    boardR = boardR.T
+    for column in range(len(boardR)):
+        if not '-' in ''.join(map(str, boardR[column])):
+            for i in varDomain:
+                if int(''.join(map(str, boardR[column])), 2) in i.getDomain() and 'C' in i.getName():
+                    if int(i.getName()[1:]) != column:
+                        # print(i.getName(),"  -C-  ",i.getDomain())
+                        # print(column)
+                        i.getDomain().remove(int(''.join(map(str, boardR[column])), 2))
 
     makeRowNodeConsistent(n, board, varDomain)
     makeColNodeConsistent(n, board, varDomain)
 
+    # print("_______________________________")
+
     return varDomain
 
 
-def binaryToDecimal(binary):
-    decimal, i, n = 0, 0, 0
-    while binary != 0:
-        dec = binary % 10
-        decimal = decimal + dec * pow(2, i)
-        binary = binary // 10
-        i += 1
-    return decimal
+def LCV(var, domain, board):
+    # print(domain)
+    # print(var, " : ", domain)
+    printBoard(board, len(board))
+    boardR = numpy.array(board).T
+    printBoard(boardR, len(boardR))
+    num = int(var[1:])
+    dictForSort = {}
+
+    if 'C' in var:
+        for domainItem in domain:
+            dictForSort[domainItem] = 0
+            binaryDomainItem = [int(i) for i in bin(domainItem)[2:]]
+            while len(binaryDomainItem) < len(board):
+                binaryDomainItem.insert(0, 0)
+            for boardItem in boardR:
+                if not '-' in ''.join(map(str, boardItem)):
+                    if int(''.join(map(str, boardItem)), 2) == domainItem:
+                        dictForSort[domainItem] = dictForSort[domainItem] - 1
 
 
-def checking(varDomain):
-    tmpDictR = {}
-    tmpDictC = {}
-    for dName in varDomain:
-        if 'C' in dName.getName():
-            for dom in dName.getDomain():
-                try:
-                    tmpDictC[dom]
-                    dName.getDomain().remove(dom)
-                    tmpDictC[dom] = False
-                except:
-                    tmpDictC[dom] = True
-        elif 'R' in dName.getName():
-            for dom in dName.getDomain():
-                try:
-                    tmpDictR[dom]
-                    dName.getDomain().remove(dom)
-                    tmpDictR[dom] = False
-                except:
-                    tmpDictR[dom] = True
+            for item in range(len(boardR[num])):
+                if str(boardR[num][item]) != '-' :
+                    if int(boardR[num][item]) != int(binaryDomainItem[item]):
+                            dictForSort[domainItem] = dictForSort[domainItem] - 1
 
 
-def LCV(domain):
-    # TODO: Complete LCV
-    return domain
+
+    elif 'R' in var:
+        for domainItem in domain:
+            dictForSort[domainItem] = 0
+            binaryDomainItem = [int(i) for i in bin(domainItem)[2:]]
+            while len(binaryDomainItem) < len(board):
+                binaryDomainItem.insert(0, 0)
+            for boardItem in board:
+                if not '-' in ''.join(map(str, boardItem)):
+                    if int(''.join(map(str, boardItem)), 2) == domainItem:
+                        dictForSort[domainItem] = dictForSort[domainItem] - 1
+        for item in range(len(board[num])):
+            if str(board[num][item]) != '-':
+                if int(board[num][item]) != int(binaryDomainItem[item]):
+                    dictForSort[domainItem] = dictForSort[domainItem] - 1
+    # for i in dictForSort.keys():
+        # print(i," = ",dictForSort[i])
+
+    sort_orders = sorted(dictForSort.items(), key=lambda x: x[1], reverse=True)
+    sortedArr = []
+    for i in sort_orders:
+        sortedArr.append(i[0])
+    # print(sortedArr)
+
+    return sortedArr
 
 
 def updateBoard(board, name, v, n):
@@ -108,7 +139,7 @@ def printBoard(board, n):
         for j in range(n):
             print(board[i][j], end=" ")
         print()
-    print(end="\n\n")
+    print(end="\n")
 
 
 def backtrackingCSP(A, varDomains, n, board):
@@ -116,7 +147,7 @@ def backtrackingCSP(A, varDomains, n, board):
         return A
 
     X = MCV(A, varDomains)
-    D = LCV(X.getDomain())
+    D = LCV(X.getName(), X.getDomain(), board)
 
     for v in D:
 
@@ -133,7 +164,7 @@ def backtrackingCSP(A, varDomains, n, board):
         result = backtrackingCSP(A, deepcopy(domain), n, boardThisLevel)
 
         if result:
-            printBoard(board, n)
+            # printBoard(board, n)
             return result
         A.pop(X.getName())
 
