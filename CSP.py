@@ -40,8 +40,6 @@ def forwardChecking(varDomain, board, n):
             for i in varDomain:
                 if int(''.join(map(str, board[row])), 2) in i.getDomain() and 'R' in i.getName():
                     if int(i.getName()[1:]) != row:
-                        # print(i.getName(),"  -R-  ",i.getDomain())
-                        # print(row)
                         i.getDomain().remove(int(''.join(map(str, board[row])), 2))
 
     boardR = numpy.array(board)
@@ -51,24 +49,16 @@ def forwardChecking(varDomain, board, n):
             for i in varDomain:
                 if int(''.join(map(str, boardR[column])), 2) in i.getDomain() and 'C' in i.getName():
                     if int(i.getName()[1:]) != column:
-                        # print(i.getName(),"  -C-  ",i.getDomain())
-                        # print(column)
                         i.getDomain().remove(int(''.join(map(str, boardR[column])), 2))
 
     makeRowNodeConsistent(n, board, varDomain)
     makeColNodeConsistent(n, board, varDomain)
 
-    # print("_______________________________")
-
     return varDomain
 
 
 def LCV(var, domain, board):
-    # print(domain)
-    # print(var, " : ", domain)
-    printBoard(board, len(board))
     boardR = numpy.array(board).T
-    printBoard(boardR, len(boardR))
     num = int(var[1:])
     dictForSort = {}
 
@@ -83,13 +73,10 @@ def LCV(var, domain, board):
                     if int(''.join(map(str, boardItem)), 2) == domainItem:
                         dictForSort[domainItem] = dictForSort[domainItem] - 1
 
-
             for item in range(len(boardR[num])):
-                if str(boardR[num][item]) != '-' :
+                if str(boardR[num][item]) != '-':
                     if int(boardR[num][item]) != int(binaryDomainItem[item]):
-                            dictForSort[domainItem] = dictForSort[domainItem] - 1
-
-
+                        dictForSort[domainItem] = dictForSort[domainItem] - 1
 
     elif 'R' in var:
         for domainItem in domain:
@@ -105,14 +92,11 @@ def LCV(var, domain, board):
             if str(board[num][item]) != '-':
                 if int(board[num][item]) != int(binaryDomainItem[item]):
                     dictForSort[domainItem] = dictForSort[domainItem] - 1
-    # for i in dictForSort.keys():
-        # print(i," = ",dictForSort[i])
 
     sort_orders = sorted(dictForSort.items(), key=lambda x: x[1], reverse=True)
     sortedArr = []
     for i in sort_orders:
         sortedArr.append(i[0])
-    # print(sortedArr)
 
     return sortedArr
 
@@ -147,7 +131,8 @@ def backtrackingCSP(A, varDomains, n, board):
         return A
 
     X = MCV(A, varDomains)
-    D = LCV(X.getName(), X.getDomain(), board)
+    # D = LCV(X.getName(), X.getDomain(), board)
+    D = X.getDomain()
 
     for v in D:
 
@@ -161,10 +146,10 @@ def backtrackingCSP(A, varDomains, n, board):
         if isThereEmptyVariable(domain):
             return False
 
-        result = backtrackingCSP(A, deepcopy(domain), n, boardThisLevel)
+        result = backtrackingCSP(deepcopy(A), deepcopy(domain), n, boardThisLevel)
 
         if result:
-            # printBoard(board, n)
+            printBoard(board, n)
             return result
         A.pop(X.getName())
 
