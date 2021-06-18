@@ -1,5 +1,6 @@
 import math
 
+import CSP
 from CSP import *
 from Variable import Variable
 
@@ -130,6 +131,10 @@ def main():
         while len(res) < n:
             res.insert(0, 0)
         print(var, " ", res)
+
+    for i in CSP.TablesList:
+        print(i[1])
+        printBoard(i[0], n)
 
 
 if __name__ == "__main__":

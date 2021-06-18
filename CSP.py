@@ -3,6 +3,8 @@ from copy import deepcopy
 import numpy
 from Main import makeRowNodeConsistent, makeColNodeConsistent
 
+TablesList = []
+
 
 def completenessChecker(A, n):
     if len(A) == 2 * n:
@@ -132,16 +134,12 @@ def backtrackingCSP(A, varDomains, n, board):
 
     X = MCV(A, varDomains)
     D = LCV(X.getName(), X.getDomain(), board)
-    # D = X.getDomain()
 
     for v in D:
         domain = deepcopy(varDomains)
         boardThisLevel = deepcopy(board)
         A[X.getName()] = v
         updateBoard(boardThisLevel, X.getName(), v, n)
-
-        # print(X.getName())
-        # printBoard(boardThisLevel, n)
 
         domain = forwardChecking(deepcopy(domain), boardThisLevel, n)
 
@@ -155,7 +153,8 @@ def backtrackingCSP(A, varDomains, n, board):
         result = backtrackingCSP(deepcopy(A), deepcopy(domain), n, boardThisLevel)
 
         if result:
-            printBoard(board, n)
+            TablesList.append((deepcopy(boardThisLevel), X.getName()))
+            # printBoard(board, n)
             return result
         A.pop(X.getName())
 
