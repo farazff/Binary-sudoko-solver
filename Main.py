@@ -115,6 +115,13 @@ def main():
 
     # for i in variables:
     #     print(i.getName(), " !! ", i.getDomain())
+    # for var in variables[1].getDomain():
+    #     res = [int(i) for i in bin(var)[2:]]
+    #     while len(res) < n:
+    #         res.insert(0, 0)
+    #     print(res)
+
+    # print(variables[1].getDomain())
 
     A = backtrackingCSP({}, variables, n, board)
 

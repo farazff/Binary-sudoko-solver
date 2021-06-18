@@ -36,7 +36,7 @@ def MCV(A, varDomain):
 
 def forwardChecking(varDomain, board, n):
     for row in range(len(board)):
-        if not '-' in ''.join(map(str, board[row])):
+        if '-' not in ''.join(map(str, board[row])):
             for i in varDomain:
                 if int(''.join(map(str, board[row])), 2) in i.getDomain() and 'R' in i.getName():
                     if int(i.getName()[1:]) != row:
@@ -45,7 +45,7 @@ def forwardChecking(varDomain, board, n):
     boardR = numpy.array(board)
     boardR = boardR.T
     for column in range(len(boardR)):
-        if not '-' in ''.join(map(str, boardR[column])):
+        if '-' not in ''.join(map(str, boardR[column])):
             for i in varDomain:
                 if int(''.join(map(str, boardR[column])), 2) in i.getDomain() and 'C' in i.getName():
                     if int(i.getName()[1:]) != column:
@@ -69,7 +69,7 @@ def LCV(var, domain, board):
             while len(binaryDomainItem) < len(board):
                 binaryDomainItem.insert(0, 0)
             for boardItem in boardR:
-                if not '-' in ''.join(map(str, boardItem)):
+                if '-' not in ''.join(map(str, boardItem)):
                     if int(''.join(map(str, boardItem)), 2) == domainItem:
                         dictForSort[domainItem] = dictForSort[domainItem] - 1
 
@@ -85,7 +85,7 @@ def LCV(var, domain, board):
             while len(binaryDomainItem) < len(board):
                 binaryDomainItem.insert(0, 0)
             for boardItem in board:
-                if not '-' in ''.join(map(str, boardItem)):
+                if '-' not in ''.join(map(str, boardItem)):
                     if int(''.join(map(str, boardItem)), 2) == domainItem:
                         dictForSort[domainItem] = dictForSort[domainItem] - 1
         for item in range(len(board[num])):
@@ -106,13 +106,13 @@ def updateBoard(board, name, v, n):
     while len(res) < n:
         res.insert(0, 0)
     if name[0] == 'R':
-        rowNum = int(name[1])
+        rowNum = int(name[1:])
         for i in range(n):
             board[rowNum][i] = res[i]
         return
 
     if name[0] == 'C':
-        colNum = int(name[1])
+        colNum = int(name[1:])
         for i in range(n):
             board[i][colNum] = res[i]
         return
@@ -131,20 +131,26 @@ def backtrackingCSP(A, varDomains, n, board):
         return A
 
     X = MCV(A, varDomains)
-    # D = LCV(X.getName(), X.getDomain(), board)
-    D = X.getDomain()
+    D = LCV(X.getName(), X.getDomain(), board)
+    # D = X.getDomain()
 
     for v in D:
-
         domain = deepcopy(varDomains)
         boardThisLevel = deepcopy(board)
         A[X.getName()] = v
         updateBoard(boardThisLevel, X.getName(), v, n)
 
-        domain = forwardChecking(domain, boardThisLevel, n)
+        # print(X.getName())
+        # printBoard(boardThisLevel, n)
+
+        domain = forwardChecking(deepcopy(domain), boardThisLevel, n)
 
         if isThereEmptyVariable(domain):
-            return False
+            if v == D[-1]:
+                return False
+            else:
+                A.pop(X.getName())
+                continue
 
         result = backtrackingCSP(deepcopy(A), deepcopy(domain), n, boardThisLevel)
 
