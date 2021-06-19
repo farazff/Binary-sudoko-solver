@@ -65,15 +65,19 @@ def printBoard(board, n):
     print(end="\n")
 
 
-def start():
-    size = input().split()
-    n = int(size[0])
+def start(tesNum):
+    path = "Puzzles/puzzle" + str(tesNum) + ".txt"
+    f = open(path, "r")
+    firstLineSTR = f.readline()
+    firstLineLIST = firstLineSTR.split()
+    n = int(firstLineLIST[0])
     board = []
     for i in range(n):
-        temp = input()
+        temp = f.readline()
         row = temp.split()
         board.append(row)
 
+    printBoard(board, n)
     variables = []
     createVariables(n, variables)
     makeDomainFull(n, variables)
