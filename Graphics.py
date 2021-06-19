@@ -1,0 +1,84 @@
+import time
+import pygame
+import CSP
+
+
+
+class Graphics:
+    def __init__(self, tablesList, steps, n):
+        self.tablesList = tablesList
+        self.steps = steps
+        self.__one = pygame.image.load("./pictures/1.png")
+        self.__zero = pygame.image.load("./pictures/0.png")
+        self.__empty = pygame.image.load("./pictures/-.png")
+        self.__background = pygame.image.load("./pictures/bg.jpg")
+        self.__transparent = pygame.image.load("./pictures/yellow.png")
+        self.__n = n
+        self.__height = 700
+        self.__lenght = 460
+        self.__scale = 380 // n
+        self.__screen = None
+
+    def display(self):
+        pygame.init()
+        self.__screen = pygame.display.set_mode((self.__lenght, self.__height))
+        self.__background = pygame.transform.scale(self.__background, (self.__lenght, self.__height))
+        self.__one = pygame.transform.scale(self.__one, (self.__scale, self.__scale))
+        self.__zero = pygame.transform.scale(self.__zero, (self.__scale, self.__scale))
+        self.__empty = pygame.transform.scale(self.__empty, (self.__scale, self.__scale))
+        self.__transparent = pygame.transform.scale(self.__transparent, (self.__scale, self.__scale))
+        x = 0.5 * (self.__lenght - self.__n * self.__scale)
+        y = 0.5 * (self.__height - self.__n * self.__scale)
+        buttonLeft = pygame.Rect(50, 600, 50, 50)
+        buttonRight = pygame.Rect(360, 600, 50, 50)
+        step=0
+        changed=True
+        while True:
+
+            for event in pygame.event.get():
+                if event.type==pygame.QUIT:
+                        pygame.quit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = event.pos
+                    if buttonLeft.collidepoint(mouse_pos):
+                        print('button Left was pressed at {0}'.format(mouse_pos))
+                        if step>0:
+                            step=step-1
+                        changed=True
+
+                    elif buttonRight.collidepoint(mouse_pos):
+                            print('button Right was pressed at {0}'.format(mouse_pos))
+                            if step<len(self.tablesList)-1:
+                                step=step+1
+                            changed=True
+
+
+
+            # for step in range(len(self.tablesList)):
+
+            if changed:
+                self.__screen.blit(self.__background, (0, 0))
+                pygame.draw.rect(self.__screen, [10, 255, 128], buttonLeft)
+                pygame.draw.rect(self.__screen, [10, 255, 128], buttonRight)
+                for row in range(len(self.tablesList[step])):
+                    for item in range(len(self.tablesList[step][row])):
+
+                        if 'R' in self.steps[step] and int(self.steps[step][1:]) == row:
+                            self.__screen.blit(self.__transparent, (x + item * self.__scale, y + row * self.__scale))
+                        elif 'C' in self.steps[step] and int(self.steps[step][1:]) == item:
+                            self.__screen.blit(self.__transparent, (x + item * self.__scale, y + row * self.__scale))
+
+                        if self.tablesList[step][row][item] == '-':
+                            self.__screen.blit(self.__empty, (x + item * self.__scale, y + row * self.__scale))
+                        elif self.tablesList[step][row][item] == 1 or self.tablesList[step][row][item] == '1':
+                            self.__screen.blit(self.__one, (x + item * self.__scale, y + row * self.__scale))
+                        elif self.tablesList[step][row][item] == 0 or self.tablesList[step][row][item] == '0':
+                            self.__screen.blit(self.__zero, (x + item * self.__scale, y + row * self.__scale))
+
+                        pygame.display.update()
+                pygame.time.Clock().tick(200)
+                changed=False
+
+
+
+
