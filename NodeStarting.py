@@ -66,7 +66,7 @@ def printBoard(board, n):
     print(end="\n")
 
 
-def start(tesNum):
+def start(tesNum, doForward):
     path = "Puzzles/puzzle" + str(tesNum) + ".txt"
     f = open(path, "r")
     firstLineSTR = f.readline()
@@ -88,7 +88,7 @@ def start(tesNum):
     equalZeroOne(n, variables)
     moreThanTwoSame(n, variables)
 
-    A = backtrackingCSP({}, variables, n, board)
+    A = backtrackingCSP({}, variables, n, board, doForward)
 
     if type(A) is bool:
         print("There is no answer you looser :)")

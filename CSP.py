@@ -238,14 +238,12 @@ def MAC(A, varDomains, X, domain, n, v):
     return domain
 
 
-def backtrackingCSP(A, varDomains, n, board):
+def backtrackingCSP(A, varDomains, n, board, doForward):
     if completenessChecker(A, n):
         return A
 
     X = MCV(A, varDomains)
-    print(X.getDomain())
     D = LCV(X.getName(), X.getDomain(), varDomains, board, n)
-    print(D)
 
     for v in D:
         domain = deepcopy(varDomains)
@@ -253,9 +251,10 @@ def backtrackingCSP(A, varDomains, n, board):
         A[X.getName()] = v
         updateBoard(boardThisLevel, X.getName(), v, n)
 
-        # domain = forwardChecking(deepcopy(domain), boardThisLevel, n)
-
-        domain = MAC(A, varDomains, X, domain, n, v)
+        if doForward is True:
+            domain = forwardChecking(deepcopy(domain), boardThisLevel, n)
+        else:
+            domain = MAC(A, varDomains, X, domain, n, v)
 
         if domain is False or isThereEmptyVariable(domain):
             if v == D[-1]:
@@ -264,7 +263,7 @@ def backtrackingCSP(A, varDomains, n, board):
                 A.pop(X.getName())
                 continue
 
-        result = backtrackingCSP(deepcopy(A), deepcopy(domain), n, boardThisLevel)
+        result = backtrackingCSP(deepcopy(A), deepcopy(domain), n, boardThisLevel, doForward)
 
         if result:
             TablesList.append((deepcopy(boardThisLevel), X.getName()))
