@@ -132,9 +132,16 @@ def main():
             res.insert(0, 0)
         print(var, " ", res)
 
+    tables=[]
+    steps=[]
     for i in CSP.TablesList:
-        print(i[1])
-        printBoard(i[0], n)
+        tables.append(i[0])
+        steps.append(i[1])
+    tables.reverse()
+    steps.reverse()
+    graphic=Graphics(tables,steps,n)
+    graphic.display()
+
 
 
 if __name__ == "__main__":

@@ -9,6 +9,8 @@ class Graphics:
         self.tablesList = tablesList
         self.steps = steps
         self.__one = pygame.image.load("./pictures/1.png")
+        self.__right = pygame.image.load("./pictures/right.png")
+        self.__left = pygame.image.load("./pictures/left.png")
         self.__zero = pygame.image.load("./pictures/0.png")
         self.__empty = pygame.image.load("./pictures/-.png")
         self.__background = pygame.image.load("./pictures/bg.jpg")
@@ -24,13 +26,18 @@ class Graphics:
         self.__screen = pygame.display.set_mode((self.__lenght, self.__height))
         self.__background = pygame.transform.scale(self.__background, (self.__lenght, self.__height))
         self.__one = pygame.transform.scale(self.__one, (self.__scale, self.__scale))
+        self.__left = pygame.transform.scale(self.__left, (2*self.__scale, self.__scale))
+        self.__right = pygame.transform.scale(self.__right, (2*self.__scale, self.__scale))
         self.__zero = pygame.transform.scale(self.__zero, (self.__scale, self.__scale))
         self.__empty = pygame.transform.scale(self.__empty, (self.__scale, self.__scale))
         self.__transparent = pygame.transform.scale(self.__transparent, (self.__scale, self.__scale))
         x = 0.5 * (self.__lenght - self.__n * self.__scale)
         y = 0.5 * (self.__height - self.__n * self.__scale)
-        buttonLeft = pygame.Rect(50, 600, 50, 50)
-        buttonRight = pygame.Rect(360, 600, 50, 50)
+        buttonLeft = pygame.Rect(50, 600, 2*self.__scale, self.__scale)
+        buttonRight = pygame.Rect(340, 600, 2*self.__scale, self.__scale)
+        # win = pygame.display.set_mode((200, 600))
+
+
         step=0
         changed=True
         while True:
@@ -60,6 +67,10 @@ class Graphics:
                 self.__screen.blit(self.__background, (0, 0))
                 pygame.draw.rect(self.__screen, [10, 255, 128], buttonLeft)
                 pygame.draw.rect(self.__screen, [10, 255, 128], buttonRight)
+                self.__screen.blit(self.__left, (50, 600))
+                self.__screen.blit(self.__right, (340, 600))
+                # letter3 = Font.render(self.steps[step], False, orange, yellow)
+                # self.__screen.blit(, (200,600))
                 for row in range(len(self.tablesList[step])):
                     for item in range(len(self.tablesList[step][row])):
 
