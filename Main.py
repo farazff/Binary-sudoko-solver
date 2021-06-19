@@ -3,7 +3,7 @@ import math
 import CSP
 from CSP import *
 from Variable import Variable
-
+from Graphics import Graphics
 
 def createVariables(n, variables):
     for i in range(n):
@@ -131,10 +131,21 @@ def main():
         while len(res) < n:
             res.insert(0, 0)
         print(var, " ", res)
-
+    # tablesList=list(deepcopy(CSP.TablesList)).reverse()
+    tables=[]
+    steps=[]
     for i in CSP.TablesList:
-        print(i[1])
-        printBoard(i[0], n)
+        tables.append(i[0])
+        steps.append(i[1])
+    tables.reverse()
+    steps.reverse()
+    for i in range(len(tables)):
+        print(steps[i])
+        print(tables[i])
+
+
+    graphics=Graphics(tables,steps,n)
+    graphics.display()
 
 
 if __name__ == "__main__":
