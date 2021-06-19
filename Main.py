@@ -2,7 +2,7 @@ from NodeStarting import start
 
 
 def main():
-    testNum = 2
+    testNum = 6
     start(testNum)
 
 

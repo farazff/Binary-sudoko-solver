@@ -78,6 +78,7 @@ def start(tesNum):
         row = temp.split()
         board.append(row)
 
+    saveBoard = deepcopy(board)
     printBoard(board, n)
     variables = []
     createVariables(n, variables)
@@ -107,6 +108,8 @@ def start(tesNum):
     for i in getTablesList():
         tables.append(i[0])
         steps.append(i[1])
+    tables.append(saveBoard)
+    steps.append("n0")
     tables.reverse()
     steps.reverse()
     graphic = Graphics(tables, steps, n)

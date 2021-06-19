@@ -61,8 +61,8 @@ class Graphics:
 
             if changed:
                 self.__screen.blit(self.__background, (0, 0))
-                pygame.draw.rect(self.__screen, [10, 255, 128], buttonLeft)
-                pygame.draw.rect(self.__screen, [10, 255, 128], buttonRight)
+                pygame.draw.rect(self.__screen, [71, 75, 122], buttonLeft)
+                pygame.draw.rect(self.__screen, [71, 75, 122], buttonRight)
                 self.__screen.blit(self.__left, (50, 600))
                 self.__screen.blit(self.__right, (340, 600))
 
@@ -73,7 +73,8 @@ class Graphics:
                             self.__screen.blit(self.__transparent, (x + item * self.__scale, y + row * self.__scale))
                         elif 'C' in self.steps[step] and int(self.steps[step][1:]) == item:
                             self.__screen.blit(self.__transparent, (x + item * self.__scale, y + row * self.__scale))
-
+                        else:
+                            pass
                         if self.tablesList[step][row][item] == '-':
                             self.__screen.blit(self.__empty, (x + item * self.__scale, y + row * self.__scale))
                         elif self.tablesList[step][row][item] == 1 or self.tablesList[step][row][item] == '1':
