@@ -26,15 +26,15 @@ class Graphics:
         self.__screen = pygame.display.set_mode((self.__lenght, self.__height))
         self.__background = pygame.transform.scale(self.__background, (self.__lenght, self.__height))
         self.__one = pygame.transform.scale(self.__one, (self.__scale, self.__scale))
-        self.__left = pygame.transform.scale(self.__left, (2*self.__scale, self.__scale))
-        self.__right = pygame.transform.scale(self.__right, (2*self.__scale, self.__scale))
+        self.__left = pygame.transform.scale(self.__left, (80, 40))
+        self.__right = pygame.transform.scale(self.__right, (80, 40))
         self.__zero = pygame.transform.scale(self.__zero, (self.__scale, self.__scale))
         self.__empty = pygame.transform.scale(self.__empty, (self.__scale, self.__scale))
         self.__transparent = pygame.transform.scale(self.__transparent, (self.__scale, self.__scale))
         x = 0.5 * (self.__lenght - self.__n * self.__scale)
         y = 0.5 * (self.__height - self.__n * self.__scale)
-        buttonLeft = pygame.Rect(50, 600, 2*self.__scale, self.__scale)
-        buttonRight = pygame.Rect(340, 600, 2*self.__scale, self.__scale)
+        buttonLeft = pygame.Rect(50, 600, 80, 40)
+        buttonRight = pygame.Rect(340, 600, 80, 40)
         # win = pygame.display.set_mode((200, 600))
 
 
@@ -69,8 +69,7 @@ class Graphics:
                 pygame.draw.rect(self.__screen, [10, 255, 128], buttonRight)
                 self.__screen.blit(self.__left, (50, 600))
                 self.__screen.blit(self.__right, (340, 600))
-                # letter3 = Font.render(self.steps[step], False, orange, yellow)
-                # self.__screen.blit(, (200,600))
+
                 for row in range(len(self.tablesList[step])):
                     for item in range(len(self.tablesList[step][row])):
 
