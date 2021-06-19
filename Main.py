@@ -131,21 +131,10 @@ def main():
         while len(res) < n:
             res.insert(0, 0)
         print(var, " ", res)
-    # tablesList=list(deepcopy(CSP.TablesList)).reverse()
-    tables=[]
-    steps=[]
+
     for i in CSP.TablesList:
-        tables.append(i[0])
-        steps.append(i[1])
-    tables.reverse()
-    steps.reverse()
-    for i in range(len(tables)):
-        print(steps[i])
-        print(tables[i])
-
-
-    graphics=Graphics(tables,steps,n)
-    graphics.display()
+        print(i[1])
+        printBoard(i[0], n)
 
 
 if __name__ == "__main__":
