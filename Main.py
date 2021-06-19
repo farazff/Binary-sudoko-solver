@@ -114,24 +114,20 @@ def main():
     equalZeroOne(n, variables)
     moreThanTwoSame(n, variables)
 
-    # readyForAC3 = []
-    # for i in range(2 * n):
-    #     for j in range(2 * n):
-    #         if i != j:
-    #             readyForAC3.append((int(i), int(j)))
-    # AC3(readyForAC3, variables, board, n)
-
     A = backtrackingCSP({}, variables, n, board)
 
-    for var in A:
-        res = [int(i) for i in bin(A[var])[2:]]
-        while len(res) < n:
-            res.insert(0, 0)
-        print(var, " ", A[var])
+    if type(A) is bool:
+        print("There is no answer you looser :)")
+    else:
+        for var in A:
+            res = [int(i) for i in bin(A[var])[2:]]
+            while len(res) < n:
+                res.insert(0, 0)
+            print(var, " ", A[var])
 
-    for i in CSP.TablesList:
-        print(i[1])
-        printBoard(i[0], n)
+        for i in CSP.TablesList:
+            print(i[1])
+            printBoard(i[0], n)
 
 
 if __name__ == "__main__":
