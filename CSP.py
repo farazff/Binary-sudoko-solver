@@ -1,9 +1,53 @@
 import random
 from copy import deepcopy
+
 import numpy
-from Main import makeRowNodeConsistent, makeColNodeConsistent
 
 TablesList = []
+
+
+def makeRowNodeConsistent(n, board, variables):
+    for rowNUM in range(n):
+        tempList = []
+        for domainVar in variables[rowNUM].getDomain():
+            res = [int(i) for i in bin(domainVar)[2:]]
+            while len(res) < n:
+                res.insert(0, 0)
+            isOK = True
+            for k in range(n):
+                if board[rowNUM][k] != '-':
+                    if str(board[rowNUM][k]) != str(res[k]):
+                        isOK = False
+                        break
+
+            if isOK is True:
+                tempList.append(deepcopy(domainVar))
+
+        variables[rowNUM].setDomain(tempList)
+
+
+def makeColNodeConsistent(n, board, variables):
+    for colNUM in range(n):
+        tempList = []
+        for domainVar in variables[n + colNUM].getDomain():
+            res = [int(i) for i in bin(domainVar)[2:]]
+            while len(res) < n:
+                res.insert(0, 0)
+            isOK = True
+            for k in range(n):
+                if board[k][colNUM] != '-':
+                    if str(board[k][colNUM]) != str(res[k]):
+                        isOK = False
+                        break
+
+            if isOK is True:
+                tempList.append(deepcopy(domainVar))
+
+        variables[n + colNUM].setDomain(tempList)
+
+
+def getTablesList():
+    return TablesList
 
 
 def completenessChecker(A, n):
@@ -118,14 +162,6 @@ def updateBoard(board, name, v, n):
         for i in range(n):
             board[i][colNum] = res[i]
         return
-
-
-def printBoard(board, n):
-    for i in range(n):
-        for j in range(n):
-            print(board[i][j], end=" ")
-        print()
-    print(end="\n")
 
 
 def AC3(A, queue, varDomain, n):
