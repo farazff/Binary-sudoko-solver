@@ -9,6 +9,7 @@ class Graphics:
         self.steps = steps
         self.__one = pygame.image.load("./pictures/1.png")
         self.__right = pygame.image.load("./pictures/right.png")
+        self.__noAnswer = pygame.image.load("./pictures/noAnswer.jpg")
         self.__left = pygame.image.load("./pictures/left.png")
         self.__zero = pygame.image.load("./pictures/0.png")
         self.__empty = pygame.image.load("./pictures/-.png")
@@ -26,6 +27,7 @@ class Graphics:
         self.__background = pygame.transform.scale(self.__background, (self.__lenght, self.__height))
         self.__one = pygame.transform.scale(self.__one, (self.__scale, self.__scale))
         self.__left = pygame.transform.scale(self.__left, (80, 40))
+        self.__noAnswer = pygame.transform.scale(self.__noAnswer, (300, 100))
         self.__right = pygame.transform.scale(self.__right, (80, 40))
         self.__zero = pygame.transform.scale(self.__zero, (self.__scale, self.__scale))
         self.__empty = pygame.transform.scale(self.__empty, (self.__scale, self.__scale))
@@ -57,10 +59,10 @@ class Graphics:
                             step = step + 1
                         changed = True
 
-            # for step in range(len(self.tablesList)):
-
             if changed:
                 self.__screen.blit(self.__background, (0, 0))
+                if len(self.tablesList)==1:
+                    self.__screen.blit(self.__noAnswer, (80, 50))
                 pygame.draw.rect(self.__screen, [71, 75, 122], buttonLeft)
                 pygame.draw.rect(self.__screen, [71, 75, 122], buttonRight)
                 self.__screen.blit(self.__left, (50, 600))
