@@ -128,6 +128,104 @@ def printBoard(board, n):
     print(end="\n")
 
 
+def AC3(A, queue, varDomain, n):
+    while len(queue) > 0:
+        (xi, xj) = queue.pop(0)
+        if revise(varDomain, xi, xj, n):
+            if len(varDomain[xi].getDomain()) == 0:
+                return False
+            for var in varDomain:
+                if var.getName() != varDomain[xi].getName():
+                    if var.getName() != varDomain[xj].getName() and var.getName() not in A:
+                        if var.getName()[0] == 'R':
+                            num = int(var.getName()[1:])
+                        else:
+                            num = int(var.getName()[1:]) + n
+
+                        queue.append((num, int(xi)))
+    return varDomain
+
+
+def revise(varsDomain, xi, xj, n):
+    revised = False
+    newDomain = []
+
+    for varXI in varsDomain[xi].getDomain():
+        found = False
+        if str(varsDomain[xi].getName()[0]) == str(varsDomain[xj].getName()[0]):
+            for JDomain in varsDomain[xj].getDomain():
+                if JDomain != varXI:
+                    found = True
+                    break
+
+        else:
+            if str(varsDomain[xi].getName()[0]) == 'R' and str(varsDomain[xj].getName()[0]) == "C":
+                xiRow = int(varsDomain[xi].getName()[1:])
+                xjCol = int(varsDomain[xj].getName()[1:])
+                resI = [int(i) for i in bin(varXI)[2:]]
+                while len(resI) < n:
+                    resI.insert(0, 0)
+
+                toBeInJ = resI[xjCol]
+                for varXJ in varsDomain[xj].getDomain():
+                    resJ = [int(i) for i in bin(varXJ)[2:]]
+                    while len(resJ) < n:
+                        resJ.insert(0, 0)
+                    if resJ[xiRow] == toBeInJ:
+                        found = True
+                        break
+
+            if str(varsDomain[xi].getName()[0]) == 'C' and str(varsDomain[xj].getName()[0]) == "R":
+                xiCol = int(varsDomain[xi].getName()[1:])
+                xjRow = int(varsDomain[xj].getName()[1:])
+                resI = [int(i) for i in bin(varXI)[2:]]
+                while len(resI) < n:
+                    resI.insert(0, 0)
+
+                toBeInJ = resI[xjRow]
+                for varXJ in varsDomain[xj].getDomain():
+                    resJ = [int(i) for i in bin(varXJ)[2:]]
+                    while len(resJ) < n:
+                        resJ.insert(0, 0)
+                    if resJ[xiCol] == toBeInJ:
+                        found = True
+                        break
+
+        if found is False:
+            revised = True
+        else:
+            newDomain.append(deepcopy(varXI))
+
+    varsDomain[xi].setDomain(deepcopy(newDomain))
+    return revised
+
+
+def MAC(A, varDomains, X, domain, n, v):
+    listToAC3 = []
+    for var in varDomains:
+        if var.getName() in A or var.getName() == X.getName():
+            pass
+        else:
+            if var.getName()[0] == 'R':
+                num1 = int(var.getName()[1:])
+            else:
+                num1 = int(var.getName()[1:]) + n
+
+            if X.getName()[0] == 'R':
+                num2 = int(X.getName()[1:])
+            else:
+                num2 = int(X.getName()[1:]) + n
+            listToAC3.append((num1, num2))
+
+    for i in domain:
+        if i.getName() == X.getName():
+            i.setDomain([v])
+            break
+
+    domain = AC3(A, listToAC3, deepcopy(domain), n)
+    return domain
+
+
 def backtrackingCSP(A, varDomains, n, board):
     if completenessChecker(A, n):
         return A
@@ -141,9 +239,11 @@ def backtrackingCSP(A, varDomains, n, board):
         A[X.getName()] = v
         updateBoard(boardThisLevel, X.getName(), v, n)
 
-        domain = forwardChecking(deepcopy(domain), boardThisLevel, n)
+        # domain = forwardChecking(deepcopy(domain), boardThisLevel, n)
 
-        if isThereEmptyVariable(domain):
+        domain = MAC(A, varDomains, X, domain, n, v)
+
+        if domain is False or isThereEmptyVariable(domain):
             if v == D[-1]:
                 return False
             else:
@@ -154,7 +254,6 @@ def backtrackingCSP(A, varDomains, n, board):
 
         if result:
             TablesList.append((deepcopy(boardThisLevel), X.getName()))
-            # printBoard(board, n)
             return result
         A.pop(X.getName())
 
