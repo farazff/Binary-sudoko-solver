@@ -1,3 +1,4 @@
+import binhex
 import random
 from copy import deepcopy
 
@@ -119,7 +120,7 @@ def LCV(var, domain, varDomains, board, n):
     for i in sort_orders:
         sortedArr.append(i[0])
 
-    return domain
+    return sortedArr
 
 
 def updateBoard(board, name, v, n):
@@ -242,7 +243,9 @@ def backtrackingCSP(A, varDomains, n, board):
         return A
 
     X = MCV(A, varDomains)
+    print(X.getDomain())
     D = LCV(X.getName(), X.getDomain(), varDomains, board, n)
+    print(D)
 
     for v in D:
         domain = deepcopy(varDomains)
