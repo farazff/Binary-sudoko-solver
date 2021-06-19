@@ -2,7 +2,6 @@ import random
 from copy import deepcopy
 
 import numpy
-from Main import makeRowNodeConsistent, makeColNodeConsistent
 
 TablesList = []
 
@@ -104,17 +103,16 @@ def forwardChecking(varDomain, board, n):
     return varDomain
 
 
-def LCV(var, domain ,varDomains, board,n):
-
+def LCV(var, domain, varDomains, board, n):
     dictForSort = {}
     for domainItem in domain:
-            dictForSort[domainItem] = 0
-            varDomainsThisLevel = deepcopy(varDomains)
-            boardThisLevel = deepcopy(board)
-            updateBoard(boardThisLevel, var, domainItem, n)
-            newDomain = forwardChecking(varDomainsThisLevel, boardThisLevel, n)
-            for i in newDomain:
-                dictForSort[domainItem]= dictForSort[domainItem]+i.getDomainLen()
+        dictForSort[domainItem] = 0
+        varDomainsThisLevel = deepcopy(varDomains)
+        boardThisLevel = deepcopy(board)
+        updateBoard(boardThisLevel, var, domainItem, n)
+        newDomain = forwardChecking(varDomainsThisLevel, boardThisLevel, n)
+        for i in newDomain:
+            dictForSort[domainItem] = dictForSort[domainItem] + i.getDomainLen()
 
     sort_orders = sorted(dictForSort.items(), key=lambda x: x[1], reverse=True)
     sortedArr = []
@@ -244,16 +242,15 @@ def backtrackingCSP(A, varDomains, n, board):
         return A
 
     X = MCV(A, varDomains)
-    D = LCV(X.getName(), X.getDomain(),varDomains, board,n)
+    D = LCV(X.getName(), X.getDomain(), varDomains, board, n)
 
     for v in D:
         domain = deepcopy(varDomains)
         boardThisLevel = deepcopy(board)
-
         A[X.getName()] = v
         updateBoard(boardThisLevel, X.getName(), v, n)
 
-        domain = forwardChecking(deepcopy(domain), boardThisLevel, n)
+        # domain = forwardChecking(deepcopy(domain), boardThisLevel, n)
 
         domain = MAC(A, varDomains, X, domain, n, v)
 
@@ -268,7 +265,6 @@ def backtrackingCSP(A, varDomains, n, board):
 
         if result:
             TablesList.append((deepcopy(boardThisLevel), X.getName()))
-            # printBoard(board, n)
             return result
         A.pop(X.getName())
 

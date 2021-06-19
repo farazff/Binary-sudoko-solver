@@ -2,6 +2,7 @@ import math
 from copy import deepcopy
 
 from CSP import getTablesList, backtrackingCSP, makeColNodeConsistent, makeRowNodeConsistent
+from Graphics import Graphics
 from Variable import Variable
 
 
@@ -100,3 +101,13 @@ def start(tesNum):
         for i in getTablesList():
             print(i[1])
             printBoard(i[0], n)
+
+    tables = []
+    steps = []
+    for i in getTablesList():
+        tables.append(i[0])
+        steps.append(i[1])
+    tables.reverse()
+    steps.reverse()
+    graphic = Graphics(tables, steps, n)
+    graphic.display()

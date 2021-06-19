@@ -3,7 +3,6 @@ import pygame
 import CSP
 
 
-
 class Graphics:
     def __init__(self, tablesList, steps, n):
         self.tablesList = tablesList
@@ -37,29 +36,26 @@ class Graphics:
         buttonRight = pygame.Rect(340, 600, 80, 40)
         # win = pygame.display.set_mode((200, 600))
 
-
-        step=0
-        changed=True
+        step = 0
+        changed = True
         while True:
 
             for event in pygame.event.get():
-                if event.type==pygame.QUIT:
-                        pygame.quit()
+                if event.type == pygame.QUIT:
+                    pygame.quit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = event.pos
                     if buttonLeft.collidepoint(mouse_pos):
                         print('button Left was pressed at {0}'.format(mouse_pos))
-                        if step>0:
-                            step=step-1
-                        changed=True
+                        if step > 0:
+                            step = step - 1
+                        changed = True
 
                     elif buttonRight.collidepoint(mouse_pos):
-                            print('button Right was pressed at {0}'.format(mouse_pos))
-                            if step<len(self.tablesList)-1:
-                                step=step+1
-                            changed=True
-
-
+                        print('button Right was pressed at {0}'.format(mouse_pos))
+                        if step < len(self.tablesList) - 1:
+                            step = step + 1
+                        changed = True
 
             # for step in range(len(self.tablesList)):
 
@@ -87,8 +83,4 @@ class Graphics:
 
                         pygame.display.update()
                 pygame.time.Clock().tick(200)
-                changed=False
-
-
-
-
+                changed = False
